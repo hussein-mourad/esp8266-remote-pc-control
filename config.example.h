@@ -4,3 +4,5 @@
 #define AP_PASS "<your-password>"
 #define AP_TIMEOUT 120
 #define AP_TRIGGER_PIN 0 // Flash button
+
+#define FILESYSTEM LittleFS
