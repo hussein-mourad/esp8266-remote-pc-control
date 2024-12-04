@@ -9,6 +9,7 @@ WiFiManager wifiManager;
 
 void setup() {
   Serial.begin(BAUD_RATE);
+
   pinMode(AP_TRIGGER_PIN, INPUT_PULLUP);
   pinMode(STATUS_PIN, INPUT);
   pinMode(POWER_PIN, OUTPUT);
@@ -18,7 +19,8 @@ void setup() {
     Serial.println("[Storage] Couldn't mount file system.");
     return;
   }
-
+  
+  wifiManager.setConfigPortalTimeout(AP_TIMEOUT);
   wifiManager.autoConnect(AP_SSID, AP_PASS);
 
   initServer();
@@ -31,16 +33,19 @@ void loop() {
 
 void wifiOnDemandButton() {
   if (digitalRead(AP_TRIGGER_PIN) == LOW) {
-    Serial.println("AP on Demand");
-    server.stop();
-    wifiManager.setConfigPortalTimeout(AP_TIMEOUT);
-    if (!wifiManager.startConfigPortal(AP_SSID, AP_PASS)) {
-      Serial.println("failed to connect and hit timeout");
-      delay(3000);
-      ESP.restart();
-      delay(5000);
-    }
-    Serial.println("Connected to WiFi.");
-    initServer();
+    wifiOnDemand();url
   }
+}
+
+void wifiOnDemand() {
+  Serial.println("AP on Demand");
+  server.stop();
+  if (!wifiManager.startConfigPortal(AP_SSID, AP_PASS)) {
+    Serial.println("failed to connect and hit timeout");
+    delay(3000);
+    ESP.restart();
+    delay(5000);
+  }
+  Serial.println("Connected to WiFi.");
+  initServer();
 }
