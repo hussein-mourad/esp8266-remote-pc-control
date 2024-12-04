@@ -6,14 +6,14 @@
 
 #define AP_SSID "<your-ssid>"
 #define AP_PASS "<your-password>"
-#define AP_TIMEOUT 120    // 3 minutes
+#define AP_TIMEOUT 180    // 3 minutes
 #define AP_TRIGGER_PIN 0  // Flash button
 
 #define FILESYSTEM LittleFS
 
-#define STATUS_PIN D1
-#define POWER_PIN D2
-#define RESET_PIN D3
+#define STATUS_PIN D5
+#define POWER_PIN D1
+#define RESET_PIN D2
 
 #define STATUS_ON 1
 #define POWER_SIGNAL 1
