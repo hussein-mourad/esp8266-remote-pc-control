@@ -1,10 +1,10 @@
 void initServer() {
-  server.on("/poweron", handlePowerOn);
-  server.on("/poweroff", handlePowerOff);
-  server.on("/forceoff", handleForceOff);
-  server.on("/reboot", handleReboot);
-  server.on("/esp-reboot", handleESPReboot);
-  server.on("/wifi-config", handleWifiConfig);
+  server.on("/api/power/on", handlePowerOn);
+  server.on("/api/power/off", handlePowerOff);
+  server.on("/api/power/forceoff", handleForceOff);
+  server.on("/api/power/reboot", handleReboot);
+  server.on("/api/esp/reboot", handleESPReboot);
+  server.on("/api/wifi/config", handleWifiConfig);
   server.onNotFound(notFound);
 
   server.begin();
