@@ -1,0 +1,23 @@
+header {
+  background: #212121;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  list-style: none;
+  padding: 18px 16px;
+  margin: 0;
+}
+
+.nav a {
+  text-decoration: none;
+  color: white;
+}
+
+.container {
+  width: 100%;
+  max-width: 1024px;
+  padding: 0 16px;
+}
