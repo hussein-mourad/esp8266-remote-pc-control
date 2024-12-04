@@ -1,3 +1,9 @@
+const char* alreadyOnResponse = "Already on";
+const char* alreadyOffResponse = "Already off";
+const char* poweringOnResponse = "Powering on";
+const char* poweringOffResponse = "Powering off";
+const char* rebootingResponse = "Rebooting";
+
 void initServer() {
   server.on("/api/power/status", handlePowerStatus);
   server.on("/api/power/on", handlePowerOn);
@@ -24,10 +30,10 @@ void handlePowerStatus() {
 void handlePowerOn() {
   if (!authenticate()) return;
   if (digitalRead(STATUS_PIN) == STATUS_ON) {
-    server.send(400, "text/plain", "Already on");
+    server.send(400, "text/plain", alreadyOnResponse);
     return;
   }
-  server.send(200, "text/plain", "Powering on");
+  server.send(200, "text/plain", poweringOnResponse);
   digitalWrite(POWER_PIN, POWER_SIGNAL);
   delay(POWER_DELAY);
   digitalWrite(POWER_PIN, !POWER_SIGNAL);
@@ -36,10 +42,10 @@ void handlePowerOn() {
 void handlePowerOff() {
   if (!authenticate()) return;
   if (digitalRead(STATUS_PIN) != STATUS_ON) {
-    server.send(400, "text/plain", "Already off");
+    server.send(400, "text/plain", alreadyOffResponse);
     return;
   }
-  server.send(200, "text/plain", "Powering off");
+  server.send(200, "text/plain", poweringOffResponse);
   digitalWrite(POWER_PIN, POWER_SIGNAL);
   delay(POWER_DELAY);
   digitalWrite(POWER_PIN, !POWER_SIGNAL);
@@ -48,10 +54,10 @@ void handlePowerOff() {
 void handleForceOff() {
   if (!authenticate()) return;
   if (digitalRead(STATUS_PIN) != STATUS_ON) {
-    server.send(400, "text/plain", "Already off");
+    server.send(400, "text/plain", alreadyOffResponse);
     return;
   }
-  server.send(200, "text/plain", "Powering off");
+  server.send(200, "text/plain", poweringOffResponse);
   delay(500);
   digitalWrite(POWER_PIN, POWER_SIGNAL);
   delay(FORCE_OFF_DELAY);
@@ -61,10 +67,10 @@ void handleForceOff() {
 void handleReboot() {
   if (!authenticate()) return;
   if (digitalRead(STATUS_PIN) != STATUS_ON) {
-    server.send(400, "text/plain", "PC is off.");
+    server.send(400, "text/plain", alreadyOffResponse);
     return;
   }
-  server.send(200, "text/plain", "Rebooting");
+  server.send(200, "text/plain", rebootingResponse);
   digitalWrite(RESET_PIN, RESET_SIGNAL);
   delay(POWER_DELAY);
   digitalWrite(RESET_PIN, !RESET_SIGNAL);
@@ -72,7 +78,7 @@ void handleReboot() {
 
 void handleESPReboot() {
   if (!authenticate()) return;
-  server.send(200, "text/plain", "Rebooting");
+  server.send(200, "text/plain", rebootingResponse);
   delay(500);
   ESP.restart();
 }
