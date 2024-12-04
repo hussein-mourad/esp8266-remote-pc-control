@@ -24,10 +24,10 @@ void handlePowerStatus() {
 void handlePowerOn() {
   if (!authenticate()) return;
   if (digitalRead(STATUS_PIN) == STATUS_ON) {
-    server.send(400, "text/plain", "PC is already on.");
+    server.send(400, "text/plain", "Already on");
     return;
   }
-  server.send(200, "text/plain", "PC is powering on...");
+  server.send(200, "text/plain", "Powering on");
   digitalWrite(POWER_PIN, POWER_SIGNAL);
   delay(POWER_DELAY);
   digitalWrite(POWER_PIN, !POWER_SIGNAL);
@@ -36,10 +36,10 @@ void handlePowerOn() {
 void handlePowerOff() {
   if (!authenticate()) return;
   if (digitalRead(STATUS_PIN) != STATUS_ON) {
-    server.send(400, "text/plain", "PC is already off.");
+    server.send(400, "text/plain", "Already off");
     return;
   }
-  server.send(200, "text/plain", "PC is powering off...");
+  server.send(200, "text/plain", "Powering off");
   digitalWrite(POWER_PIN, POWER_SIGNAL);
   delay(POWER_DELAY);
   digitalWrite(POWER_PIN, !POWER_SIGNAL);
@@ -48,10 +48,10 @@ void handlePowerOff() {
 void handleForceOff() {
   if (!authenticate()) return;
   if (digitalRead(STATUS_PIN) != STATUS_ON) {
-    server.send(400, "text/plain", "PC is already off.");
+    server.send(400, "text/plain", "Already off");
     return;
   }
-  server.send(200, "text/plain", "PC is powering off...");
+  server.send(200, "text/plain", "Powering off");
   delay(500);
   digitalWrite(POWER_PIN, POWER_SIGNAL);
   delay(FORCE_OFF_DELAY);
@@ -64,7 +64,7 @@ void handleReboot() {
     server.send(400, "text/plain", "PC is off.");
     return;
   }
-  server.send(200, "text/plain", "PC is rebooting...");
+  server.send(200, "text/plain", "Rebooting");
   digitalWrite(RESET_PIN, RESET_SIGNAL);
   delay(POWER_DELAY);
   digitalWrite(RESET_PIN, !RESET_SIGNAL);
@@ -72,7 +72,7 @@ void handleReboot() {
 
 void handleESPReboot() {
   if (!authenticate()) return;
-  server.send(200, "text/plain", "System is restarting...");
+  server.send(200, "text/plain", "Rebooting");
   delay(500);
   ESP.restart();
 }
