@@ -127,7 +127,7 @@ String getContentType(String filename) {
 bool authenticate() {
   if (!server.authenticate(WWW_USERNAME, WWW_PASSWORD)) {
     server.requestAuthentication();
-    return false;  // Stop further processing
+    return false;
   }
-  return true;  // Proceed to the route handler
+  return true;
 }
