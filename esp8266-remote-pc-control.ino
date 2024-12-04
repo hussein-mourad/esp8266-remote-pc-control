@@ -19,7 +19,7 @@ void setup() {
     Serial.println("[Storage] Couldn't mount file system.");
     return;
   }
-  
+
   wifiManager.setConfigPortalTimeout(AP_TIMEOUT);
   wifiManager.autoConnect(AP_SSID, AP_PASS);
 
@@ -33,7 +33,7 @@ void loop() {
 
 void wifiOnDemandButton() {
   if (digitalRead(AP_TRIGGER_PIN) == LOW) {
-    wifiOnDemand();url
+    wifiOnDemand();
   }
 }
 
