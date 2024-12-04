@@ -13,68 +13,59 @@ void initServer() {
 
 void handlePowerOn() {
   if (digitalRead(STATUS_PIN) == STATUS_ON) {
-    server.send(401, "text/plain", "PC is already on.");
+    server.send(400, "text/plain", "PC is already on.");
     return;
   }
-
+  server.send(200, "text/plain", "PC is powering on...");
   digitalWrite(POWER_PIN, POWER_SIGNAL);
   delay(POWER_DELAY);
   digitalWrite(POWER_PIN, !POWER_SIGNAL);
-  server.send(200, "text/plain", "PC is powering on...");
 }
 
 void handlePowerOff() {
   if (digitalRead(STATUS_PIN) != STATUS_ON) {
-    server.send(401, "text/plain", "PC is already off.");
+    server.send(400, "text/plain", "PC is already off.");
     return;
   }
-
+  server.send(200, "text/plain", "PC is powering off...");
   digitalWrite(POWER_PIN, POWER_SIGNAL);
   delay(POWER_DELAY);
   digitalWrite(POWER_PIN, !POWER_SIGNAL);
-  server.send(200, "text/plain", "PC is powering off...");
 }
 
 void handleForceOff() {
   if (digitalRead(STATUS_PIN) != STATUS_ON) {
-    server.send(401, "text/plain", "PC is already off.");
+    server.send(400, "text/plain", "PC is already off.");
     return;
   }
-
+  server.send(200, "text/plain", "PC is powering off...");
+  delay(500);
   digitalWrite(POWER_PIN, POWER_SIGNAL);
   delay(FORCE_OFF_DELAY);
   digitalWrite(POWER_PIN, !POWER_SIGNAL);
-  server.send(200, "text/plain", "PC is powering off...");
 }
 
 void handleReboot() {
   if (digitalRead(STATUS_PIN) != STATUS_ON) {
-    server.send(401, "text/plain", "PC is off.");
+    server.send(400, "text/plain", "PC is off.");
     return;
   }
-
+  server.send(200, "text/plain", "PC is rebooting...");
   digitalWrite(RESET_PIN, RESET_SIGNAL);
   delay(POWER_DELAY);
   digitalWrite(RESET_PIN, !RESET_SIGNAL);
-  server.send(200, "text/plain", "PC is rebooting...");
 }
 
 void handleESPReboot() {
   server.send(200, "text/plain", "System is restarting...");
-  delay(1000);
+  delay(500);
   ESP.restart();
 }
 
 void handleWifiConfig() {
   server.send(200, "text/plain", "Connect to AP and Go to 192.168.4.1");
-  delay(1000);
-  wifiManager.setConfigPortalTimeout(AP_TIMEOUT);
-  if (!wifiManager.startConfigPortal(AP_SSID, AP_PASS)) {
-    Serial.println("failed to connect and hit timeout");
-    delay(3000);
-    ESP.restart();
-    delay(5000);
-  }
+  delay(500);
+  wifiOnDemand();
 }
 
 void notFound() {
