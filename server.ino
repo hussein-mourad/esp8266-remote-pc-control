@@ -12,6 +12,7 @@ void initServer() {
 }
 
 void handlePowerOn() {
+  if (!authenticate()) return;
   if (digitalRead(STATUS_PIN) == STATUS_ON) {
     server.send(400, "text/plain", "PC is already on.");
     return;
@@ -23,6 +24,7 @@ void handlePowerOn() {
 }
 
 void handlePowerOff() {
+  if (!authenticate()) return;
   if (digitalRead(STATUS_PIN) != STATUS_ON) {
     server.send(400, "text/plain", "PC is already off.");
     return;
@@ -34,6 +36,7 @@ void handlePowerOff() {
 }
 
 void handleForceOff() {
+  if (!authenticate()) return;
   if (digitalRead(STATUS_PIN) != STATUS_ON) {
     server.send(400, "text/plain", "PC is already off.");
     return;
@@ -46,6 +49,7 @@ void handleForceOff() {
 }
 
 void handleReboot() {
+  if (!authenticate()) return;
   if (digitalRead(STATUS_PIN) != STATUS_ON) {
     server.send(400, "text/plain", "PC is off.");
     return;
@@ -57,18 +61,21 @@ void handleReboot() {
 }
 
 void handleESPReboot() {
+  if (!authenticate()) return;
   server.send(200, "text/plain", "System is restarting...");
   delay(500);
   ESP.restart();
 }
 
 void handleWifiConfig() {
+  if (!authenticate()) return;
   server.send(200, "text/plain", "Connect to AP and Go to 192.168.4.1");
   delay(500);
   wifiOnDemand();
 }
 
 void notFound() {
+  if (!authenticate()) return;
   if (!handleFileRead(server.uri())) {
     Serial.println("[Storage] Couldn't find file at \'" + server.uri() + "\'" + ".");
     server.send(404, "text/plain", "Not found");
@@ -105,4 +112,12 @@ String getContentType(String filename) {
   else if (filename.endsWith(".zip")) return "application/x-zip";
   else if (filename.endsWith(".gz")) return "application/x-gzip";
   return "text/plain";
+}
+
+bool authenticate() {
+  if (!server.authenticate(WWW_USERNAME, WWW_PASSWORD)) {
+    server.requestAuthentication();
+    return false;  // Stop further processing
+  }
+  return true;  // Proceed to the route handler
 }

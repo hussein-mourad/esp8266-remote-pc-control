@@ -1,6 +1,9 @@
 #ifndef CONFIG
 #define BAUD_RATE 115200
 
+#define WWW_USERNAME "<your-username>"
+#define WWW_PASSWORD "<your-password>"
+
 #define AP_SSID "<your-ssid>"
 #define AP_PASS "<your-password>"
 #define AP_TIMEOUT 120    // 3 minutes
