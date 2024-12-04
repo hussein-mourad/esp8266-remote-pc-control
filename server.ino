@@ -6,7 +6,7 @@ void initServer() {
   server.on("/api/power/reboot", handleReboot);
   server.on("/api/esp/reboot", handleESPReboot);
   server.on("/api/wifi/config", handleWifiConfig);
-  server.onNotFound(notFound);
+  server.onNotFound(handleNotFound);
 
   server.begin();
   Serial.println("HTTP server started");
@@ -84,7 +84,7 @@ void handleWifiConfig() {
   wifiOnDemand();
 }
 
-void notFound() {
+void handleNotFound() {
   if (!authenticate()) return;
   if (!handleFileRead(server.uri())) {
     Serial.println("[Storage] Couldn't find file at \'" + server.uri() + "\'" + ".");
