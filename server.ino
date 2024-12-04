@@ -1,4 +1,5 @@
 void initServer() {
+  server.on("/api/power/status", handlePowerStatus);
   server.on("/api/power/on", handlePowerOn);
   server.on("/api/power/off", handlePowerOff);
   server.on("/api/power/forceoff", handleForceOff);
@@ -9,6 +10,15 @@ void initServer() {
 
   server.begin();
   Serial.println("HTTP server started");
+}
+
+void handlePowerStatus() {
+  if (!authenticate()) return;
+  if (digitalRead(STATUS_PIN) == STATUS_ON) {
+    server.send(200, "text/plain", "Up");
+  } else {
+    server.send(200, "text/plain", "Down");
+  }
 }
 
 void handlePowerOn() {
