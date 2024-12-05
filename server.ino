@@ -5,13 +5,13 @@ const char* poweringOffResponse = "Powering off";
 const char* rebootingResponse = "Rebooting";
 
 void initServer() {
-  server.on("/api/power/status", handlePowerStatus);
-  server.on("/api/power/on", handlePowerOn);
-  server.on("/api/power/off", handlePowerOff);
-  server.on("/api/power/forceoff", handleForceOff);
-  server.on("/api/power/reboot", handleReboot);
-  server.on("/api/esp/reboot", handleESPReboot);
-  server.on("/api/wifi/config", handleWifiConfig);
+  server.on("/api/power/status", HTTP_GET, handlePowerStatus);
+  server.on("/api/power/on", HTTP_POST, handlePowerOn);
+  server.on("/api/power/off", HTTP_POST, handlePowerOff);
+  server.on("/api/power/forceoff", HTTP_POST, handleForceOff);
+  server.on("/api/power/reboot", HTTP_POST, handleReboot);
+  server.on("/api/esp/reboot", HTTP_POST, handleESPReboot);
+  server.on("/api/wifi/config", HTTP_POST, handleWifiConfig);
   server.onNotFound(handleNotFound);
 
   server.begin();

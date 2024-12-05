@@ -1,7 +1,7 @@
 #include <ESP8266WebServer.h>
 #include <WiFiManager.h>  // https://github.com/tzapu/WiFiManager WiFi Configuration Magic
-#include "config.h"
 #include <LittleFS.h>
+#include "config.h"
 
 ESP8266WebServer server(80);
 
