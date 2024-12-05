@@ -3,34 +3,51 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="refresh" content="3" />
-    <link rel="stylesheet" href="normalize.css" />
-    <link rel="stylesheet" href="style.css" />
-    <title>Document</title>
+    <!-- <meta http-equiv="refresh" content="3" /> -->
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
     <link rel="manifest" href="site.webmanifest" />
+    <!-- <link rel="stylesheet" href="normalize.css" /> -->
+    <link rel="stylesheet" href="style.css" />
     <title>PC Remote Controller</title>
   </head>
   <body>
     <main class="container">
       <h1>PC Remote Controller</h1>
-      <form action="/api/power/on" method="post">
-        <button type="submit">ON</button>
-      </form>
-      <form action="/api/power/off" method="post">
-        <button type="submit">OFF</button>
-      </form>
-      <form action="/api/power/forceoff" method="post">
-        <button type="submit">Force off</button>
-      </form>
-      <form action="/api/power/reboot" method="post">
-        <button type="submit">Reboot</button>
-      </form>
-      <form action="/api/power/status">
-        <button type="submit">Status</button>
-      </form>
+      <p class="status">
+        <span class="status-dot unknown"></span>
+        <span>Status:</span>
+        <span class="status-text"></span>
+      </p>
+      <div class="buttons">
+        <button
+          class="btn btn-primary"
+          onclick="return handleSubmit(event,'/api/power/on')"
+        >
+          ON
+        </button>
+        <button
+          class="btn btn-danger"
+          onclick="return handleSubmit(event,'/api/power/off')"
+        >
+          OFF
+        </button>
+        <button
+          class="btn btn-danger"
+          onclick="return handleSubmit(event,'/api/power/forceoff')"
+        >
+          Force OFF
+        </button>
+        <button
+          class="btn btn-danger"
+          onclick="return handleSubmit(event,'/api/power/reboot')"
+        >
+          Reboot
+        </button>
+      </div>
+      <p class="msg"></p>
     </main>
   </body>
+  <script src="script.js"></script>
 </html>
