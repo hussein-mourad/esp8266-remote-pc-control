@@ -7,22 +7,26 @@
     <link rel="stylesheet" href="normalize.css" />
     <link rel="stylesheet" href="style.css" />
     <title>Document</title>
+    <title>PC Remote Controller</title>
   </head>
   <body>
-    <header>
-      <nav>
-        <ul class="nav">
-          <li>
-            <a href="/">Home</a>
-          </li>
-          <li>
-            <a href="/about.html">About</a>
-          </li>
-        </ul>
-      </nav>
-    </header>
     <main class="container">
-      <h1>Index Page</h1>
+      <h1>PC Remote Controller</h1>
+      <form action="/api/power/on" method="post">
+        <button type="submit">ON</button>
+      </form>
+      <form action="/api/power/off" method="post">
+        <button type="submit">OFF</button>
+      </form>
+      <form action="/api/power/forceoff" method="post">
+        <button type="submit">Force off</button>
+      </form>
+      <form action="/api/power/reboot" method="post">
+        <button type="submit">Reboot</button>
+      </form>
+      <form action="/api/power/status">
+        <button type="submit">Status</button>
+      </form>
     </main>
   </body>
 </html>
