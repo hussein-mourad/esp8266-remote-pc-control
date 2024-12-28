@@ -1,6 +1,8 @@
 #ifndef CONFIG
 #define BAUD_RATE 115200
 
+#define OTA_HASH "<your-md5-hash>" // printf 'your-password' | md5sum | cut -d ' ' -f1 | tr -d ' '
+
 #define WWW_USERNAME "<your-username>"
 #define WWW_PASSWORD "<your-password>"
 
