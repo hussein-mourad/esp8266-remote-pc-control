@@ -1,2 +1,11 @@
+.PHONY: build
 build:
-	go build -o tmp/powerpilot
+	./scripts/build.sh
+
+.PHONY: run
+run:
+	./tmp/powerpilot $(filter-out $@,$(MAKECMDGOALS))
+
+.PHONY: clean
+clean:
+	rm -f ./tmp/powerpilot
