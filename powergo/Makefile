@@ -1,5 +1,6 @@
 .PHONY: build
 build:
+	go mod tidy
 	./scripts/build.sh
 
 .PHONY: install
