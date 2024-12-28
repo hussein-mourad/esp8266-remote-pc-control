@@ -6,8 +6,8 @@ package cmd
 import (
 	"net/http"
 
-	"github.com/hussein-mourad/esp8266-remote-pc-control/cli/internal/config"
-	"github.com/hussein-mourad/esp8266-remote-pc-control/cli/internal/request"
+	"github.com/hussein-mourad/esp8266-remote-pc-control/powergo/internal/config"
+	"github.com/hussein-mourad/esp8266-remote-pc-control/powergo/internal/request"
 	"github.com/spf13/cobra"
 )
 

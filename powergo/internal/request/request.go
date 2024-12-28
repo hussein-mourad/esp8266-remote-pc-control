@@ -5,7 +5,7 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/hussein-mourad/esp8266-remote-pc-control/cli/internal/config"
+	"github.com/hussein-mourad/esp8266-remote-pc-control/powergo/internal/config"
 )
 
 func Send(method, url string) {

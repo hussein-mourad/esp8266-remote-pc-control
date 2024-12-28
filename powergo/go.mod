@@ -1,4 +1,4 @@
-module github.com/hussein-mourad/esp8266-remote-pc-control/powerpilot
+module github.com/hussein-mourad/esp8266-remote-pc-control/powergo
 
 go 1.23.4
 
