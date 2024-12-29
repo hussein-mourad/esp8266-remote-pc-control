@@ -13,4 +13,4 @@ run: build
 
 .PHONY: clean
 clean:
-	rm -f ./tmp/powergo
+	rm -rf ./tmp
