@@ -1,7 +1,25 @@
 #!/bin/bash
+
 declare module
 declare binary
 declare ldflags
+
+# Function to check if an environment variable is set
+check_env_var() {
+  local var_name=$1
+  if [[ -z "${!var_name}" ]]; then
+    echo "Error: Environment variable $var_name is not set."
+    exit 1
+  fi
+}
+
+# List of required environment variables
+required_vars=("BASE_URL" "ESP_USERNAME" "ESP_PASSWORD" "AP_USERNAME" "AP_PASSWORD")
+
+# Check all required environment variables
+for var in "${required_vars[@]}"; do
+  check_env_var "$var"
+done
 
 module="$(head go.mod -n 1 | cut -d ' ' -f2)"
 binary=powergo
