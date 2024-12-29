@@ -1,3 +1,4 @@
+#!/bin/bash
 declare module
 declare binary
 declare ldflags
