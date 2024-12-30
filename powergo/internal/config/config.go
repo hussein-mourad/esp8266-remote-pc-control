@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -10,7 +9,9 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-const AppName = "powergo"
+const (
+	AppName = "powergo"
+)
 
 type APIConfig struct {
 	URL string `yaml:"url"`
@@ -48,20 +49,15 @@ func defaultConfig() *Config {
 	}
 }
 
-func LoadConfig() *Config {
-	configFilePath, err := getConfigFilePath()
-	if err != nil {
-		log.Fatal(err)
-	}
-
+func LoadConfig(filePath string) *Config {
 	// Check if the config file exists
-	if _, err = os.Stat(configFilePath); os.IsNotExist(err) {
+	if _, err := os.Stat(filePath); os.IsNotExist(err) {
 		log.Println("Config file not found, creating a default one...")
 
 		// Create a default config
 		defaultConfig := defaultConfig()
 
-		file, err2 := os.Create(configFilePath)
+		file, err2 := os.Create(filePath)
 		if err2 != nil {
 			log.Fatalf("Error creating config file: %v", err2)
 		}
@@ -71,12 +67,10 @@ func LoadConfig() *Config {
 		if err = encoder.Encode(&defaultConfig); err != nil {
 			log.Fatalf("Error writing default config to file: %v", err)
 		}
-
-		log.Println("Default config file created successfully.")
 	}
 
 	// Load the configuration
-	file, err := os.Open(configFilePath)
+	file, err := os.Open(filePath)
 	if err != nil {
 		log.Fatalf("Error opening config file: %v", err)
 	}
@@ -88,12 +82,10 @@ func LoadConfig() *Config {
 		log.Fatalf("Error decoding config file: %v", err)
 	}
 
-	// Access configuration values
-	fmt.Printf("Server Base URL: %s\n", config.API.URL)
 	return &config
 }
 
-func getConfigFilePath() (string, error) {
+func GetDefaultConfigFilePath() string {
 	var configDir string
 	switch runtime.GOOS {
 	case "windows":
@@ -108,15 +100,24 @@ func getConfigFilePath() (string, error) {
 	}
 
 	if configDir == "" {
-		return "", fmt.Errorf("unable to determine configuration directory for %s", runtime.GOOS)
+		log.Fatalf("unable to determine configuration directory for %s", runtime.GOOS)
 	}
 
 	// Ensure the directory exists, create it if it doesn't.
 	configDirPath := filepath.Join(configDir, AppName)
 	err := os.MkdirAll(configDirPath, os.ModePerm)
 	if err != nil {
-		return "", fmt.Errorf("unable to create configuration directory: %v", err)
+		log.Fatalf("unable to create configuration directory: %v", err)
 	}
 
-	return filepath.Join(configDirPath, "config.yaml"), nil
+	return filepath.Join(configDirPath, "config.yaml")
+}
+
+func GetDefaultConfigStr() string {
+	defaultConfig := defaultConfig()
+	yamlData, err := yaml.Marshal(&defaultConfig)
+	if err != nil {
+		log.Fatalf("error encoding YAML: %v", err)
+	}
+	return string(yamlData)
 }
