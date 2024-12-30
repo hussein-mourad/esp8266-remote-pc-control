@@ -6,8 +6,6 @@ package cmd
 import (
 	"net/http"
 
-	"github.com/hussein-mourad/esp8266-remote-pc-control/powergo/internal/config"
-	"github.com/hussein-mourad/esp8266-remote-pc-control/powergo/internal/request"
 	"github.com/spf13/cobra"
 )
 
@@ -16,7 +14,7 @@ var upCmd = &cobra.Command{
 	Use:   "up",
 	Short: "Turn the pc on",
 	Run: func(cmd *cobra.Command, args []string) {
-		request.Send(http.MethodPost, config.BaseURL+"/power/on")
+		req.Send(http.MethodPost, cfg.API.URL+"/power/on")
 	},
 }
 

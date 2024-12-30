@@ -1,15 +1,19 @@
+BUILD_PATH := ./tmp/powergo
+INSTALL_PATH := $(shell go env GOPATH)/bin
+
+
 .PHONY: build
 build:
 	go mod tidy
-	./scripts/build.sh
+	go build -o $(BUILD_PATH)
 
 .PHONY: install
 install: build
-	cp ./tmp/powergo $(shell go env GOPATH)/bin
+	cp $(BUILD_PATH) $(INSTALL_PATH)
 
 .PHONY: run
 run: build
-	./tmp/powergo $(filter-out $@,$(MAKECMDGOALS))
+	./$(BUILD_PATH) $(filter-out $@,$(MAKECMDGOALS))
 
 .PHONY: clean
 clean:

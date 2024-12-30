@@ -6,8 +6,6 @@ package cmd
 import (
 	"net/http"
 
-	"github.com/hussein-mourad/esp8266-remote-pc-control/powergo/internal/config"
-	"github.com/hussein-mourad/esp8266-remote-pc-control/powergo/internal/request"
 	"github.com/spf13/cobra"
 )
 
@@ -19,9 +17,9 @@ var rebootCmd = &cobra.Command{
 	Short: "Reboot handler",
 	Run: func(cmd *cobra.Command, args []string) {
 		if rebootEsp {
-			request.Send(http.MethodPost, config.BaseURL+"/esp/reboot")
+			req.Send(http.MethodPost, cfg.API.URL+"/esp/reboot")
 		} else {
-			request.Send(http.MethodPost, config.BaseURL+"/power/reboot")
+			req.Send(http.MethodPost, cfg.API.URL+"/power/reboot")
 		}
 	},
 }

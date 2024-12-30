@@ -4,13 +4,23 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-
-	"github.com/hussein-mourad/esp8266-remote-pc-control/powergo/internal/config"
 )
 
-func Send(method, url string) {
+type Handler struct {
+	username string
+	password string
+}
+
+func NewHandler(username, password string) *Handler {
+	return &Handler{
+		username: username,
+		password: password,
+	}
+}
+
+func (h *Handler) Send(method, url string) {
 	req, err := http.NewRequest(method, url, nil)
-	req.SetBasicAuth(config.Username, config.Password)
+	req.SetBasicAuth(h.username, h.password)
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
 		fmt.Println("Error sending request:", err)

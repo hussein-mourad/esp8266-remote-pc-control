@@ -6,8 +6,6 @@ package cmd
 import (
 	"net/http"
 
-	"github.com/hussein-mourad/esp8266-remote-pc-control/powergo/internal/config"
-	"github.com/hussein-mourad/esp8266-remote-pc-control/powergo/internal/request"
 	"github.com/spf13/cobra"
 )
 
@@ -16,7 +14,7 @@ var statusCmd = &cobra.Command{
 	Use:   "status",
 	Short: "Get the pc status",
 	Run: func(cmd *cobra.Command, args []string) {
-		request.Send(http.MethodGet, config.BaseURL+"/power/status")
+		req.Send(http.MethodGet, cfg.API.URL+"/power/status")
 	},
 }
 

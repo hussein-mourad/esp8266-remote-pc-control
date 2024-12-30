@@ -6,8 +6,6 @@ package cmd
 import (
 	"net/http"
 
-	"github.com/hussein-mourad/esp8266-remote-pc-control/powergo/internal/config"
-	"github.com/hussein-mourad/esp8266-remote-pc-control/powergo/internal/request"
 	"github.com/spf13/cobra"
 )
 
@@ -16,10 +14,10 @@ var configCmd = &cobra.Command{
 	Use:   "wifi-config",
 	Short: "Configure wifi",
 	Long: "Enables access point mode to configure wifi\n" +
-		"SSID: " + config.APSSID + "\n" +
-		"Password: " + config.APPASS + "\n",
+		"SSID: " + cfg.AP.SSID + "\n" +
+		"Password: " + cfg.AP.Password + "\n",
 	Run: func(cmd *cobra.Command, args []string) {
-		request.Send(http.MethodPost, config.BaseURL+"/wifi/config")
+		req.Send(http.MethodPost, cfg.API.URL+"/wifi/config")
 	},
 }
 
