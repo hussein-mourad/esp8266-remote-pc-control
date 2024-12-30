@@ -2,11 +2,26 @@
 #include <WiFiManager.h>  // https://github.com/tzapu/WiFiManager WiFi Configuration Magic
 #include <LittleFS.h>
 #include <ArduinoOTA.h>
+#include <ArduinoJson.h>
 #include "config.h"
 
 ESP8266WebServer server(80);
 
+struct Config {
+  String webUsername;
+  String webPassword;
+  String apSSID = AP_SSID;
+  String apPass;
+};
+
+Config config;
+
 WiFiManager wifiManager;
+WiFiManagerParameter webUsernameField("webUsername", "Web Username", config.webUsername.c_str(), 64);
+WiFiManagerParameter webPasswordField("webPassword", "Web Password", config.webPassword.c_str(), 64);
+WiFiManagerParameter apSSIDField("apSSID", "Access Point SSID", config.apSSID.c_str(), 64);
+WiFiManagerParameter apPassField("apPass", "Access Point Password", config.apPass.c_str(), 64);
+// WiFiManagerParameter apPassField("apPass", "Access Point Password", config.apSSID, 64, "type='password'");
 
 void setup() {
   Serial.begin(BAUD_RATE);
@@ -17,7 +32,6 @@ void setup() {
   ArduinoOTA.onProgress(OTAOnProgress);
   ArduinoOTA.onError(OTAOnError);
   ArduinoOTA.begin();
-
 
   pinMode(LED_BUILTIN, OUTPUT);
   pinMode(AP_TRIGGER_PIN, INPUT_PULLUP);
@@ -32,8 +46,36 @@ void setup() {
     return;
   }
 
-  wifiManager.setConfigPortalTimeout(AP_TIMEOUT);
-  wifiManager.autoConnect(AP_SSID, AP_PASS);
+  // wifiManager.resetSettings();        // For debugging only
+  // FILESYSTEM.remove("/config.json");  // Remove stored parameters
+
+  loadConfig();
+
+  // if (config.webUsername == "") {
+  //   wifiManager.resetSettings();        // Reset WiFi credentials
+  //   FILESYSTEM.remove("/config.json");  // Remove stored parameters
+  //   ESP.restart();                      // Restart device
+  // }
+
+  webUsernameField.setValue(config.webUsername.c_str(), 64);
+  webPasswordField.setValue(config.webPassword.c_str(), 64);
+  apSSIDField.setValue(config.apSSID.c_str(), 64);
+  apPassField.setValue(config.apPass.c_str(), 64);
+
+  wifiManager.addParameter(&webUsernameField);
+  wifiManager.addParameter(&webPasswordField);
+  wifiManager.addParameter(&apSSIDField);
+  wifiManager.addParameter(&apPassField);
+
+  // if (!strcmp(config.apPass.c_str(), "")) {
+  //   Serial.println("Pass is not set");
+  // } else {
+  //   Serial.println("Pass is set.....");
+  //   Serial.println(config.apPass);
+  // }
+
+  wifiManager.autoConnect(config.apSSID.c_str(), config.apPass.c_str());
+  wifiManager.setSaveConfigCallback(saveConfigCallback);
 
   Serial.println("Server is starting...");
   initServer();
@@ -47,14 +89,16 @@ void loop() {
 
 void wifiOnDemandButton() {
   if (digitalRead(AP_TRIGGER_PIN) == LOW) {
-    wifiOnDemand();
+    wifiManager.resetSettings();        // Reset WiFi credentials
+    FILESYSTEM.remove("/config.json");  // Remove stored parameters
+    ESP.restart();                      // Restart device
   }
 }
 
 void wifiOnDemand() {
   Serial.println("AP on Demand");
   server.stop();
-  if (!wifiManager.startConfigPortal(AP_SSID, AP_PASS)) {
+  if (!wifiManager.startConfigPortal(config.apSSID.c_str(), config.apPass.c_str())) {
     Serial.println("failed to connect and hit timeout");
     delay(3000);
     ESP.restart();
@@ -63,6 +107,72 @@ void wifiOnDemand() {
   Serial.println("Connected to WiFi.");
   initServer();
 }
+
+void loadConfig() {
+  if (FILESYSTEM.exists("/config.json")) {
+    File configFile = FILESYSTEM.open("/config.json", "r");
+    if (configFile) {
+      StaticJsonDocument<256> jsonDoc;
+      DeserializationError error = deserializeJson(jsonDoc, configFile);
+      if (!error) {
+        config.webUsername = jsonDoc["web_username"].as<String>();
+        config.webPassword = jsonDoc["web_password"].as<String>();
+        config.apSSID = jsonDoc["access_point_ssid"].as<String>();
+        config.apPass = jsonDoc["access_point_password"].as<String>();
+
+        Serial.println("Loaded config.");
+        Serial.println("Username: " + config.webUsername);
+        Serial.println("Password: " + config.webPassword);
+        Serial.println("SSID: " + config.apSSID);
+        Serial.println("Password: " + config.apPass);
+      }
+      configFile.close();
+    } else {
+      Serial.println("Failed to open config file!");
+    }
+  } else {
+    Serial.println("Config file not found!");
+  }
+}
+
+void saveConfig(Config cfg) {
+  // Save to LittleFS
+  StaticJsonDocument<256> jsonDoc;
+  jsonDoc["web_username"] = cfg.webUsername;
+  jsonDoc["web_password"] = cfg.webPassword;
+  jsonDoc["access_point_ssid"] = cfg.apSSID;
+  jsonDoc["access_point_password"] = cfg.apPass;
+
+  File configFile = FILESYSTEM.open("/config.json", "w");
+  if (configFile) {
+    serializeJson(jsonDoc, configFile);
+    configFile.close();
+    Serial.println("Saved config.");
+  } else {
+    Serial.println("Failed to save config file!");
+  }
+}
+
+void saveConfigCallback() {
+  Serial.println("Should save config");
+  Serial.printf("WWW Username %s\n", config.webUsername.c_str());
+  Serial.printf("WWW Pass %s\n", config.webPassword.c_str());
+  Serial.printf("AP SSID %s\n", config.apSSID.c_str());
+  Serial.printf("AP Pass %s\n", config.apPass.c_str());
+
+  config.webUsername = webUsernameField.getValue();
+  config.webPassword = webPasswordField.getValue();
+  config.apSSID = apSSIDField.getValue();
+  config.apPass = apPassField.getValue();
+
+  saveConfig(config);
+
+  Serial.printf("WWW Username %s\n", config.webUsername.c_str());
+  Serial.printf("WWW Pass %s\n", config.webPassword.c_str());
+  Serial.printf("AP SSID %s\n", config.apSSID.c_str());
+  Serial.printf("AP Pass %s\n", config.apPass.c_str());
+}
+
 
 void OTAOnStart() {
   String type;

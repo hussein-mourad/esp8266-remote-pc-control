@@ -131,7 +131,7 @@ String getContentType(String filename) {
 }
 
 bool authenticate() {
-  if (!server.authenticate(WWW_USERNAME, WWW_PASSWORD)) {
+  if (!server.authenticate(config.webUsername.c_str(), config.webPassword.c_str())) {
     server.requestAuthentication();
     return false;
   }

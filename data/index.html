@@ -45,6 +45,19 @@
         >
           Reboot
         </button>
+        <div class="horizontal-line"></div>
+        <button
+          class="btn btn-primary"
+          onclick="return handleSubmit(event,'/api/wifi/config')"
+        >
+          Wifi Settings
+        </button>
+        <button
+          class="btn btn-primary"
+          onclick="return handleSubmit(event,'/api/esp/reboot')"
+        >
+          Reboot ESP
+        </button>
       </div>
       <p class="msg"></p>
     </main>
